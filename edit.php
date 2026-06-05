@@ -1,15 +1,6 @@
-
 <?php
 
-session_start();
-
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
-
-exit();
-
-
+include "connect.php";
 
 $id = $_GET['id'];
 
@@ -74,9 +65,13 @@ body{
 .edit-card{
 
     width:450px;
+
     background:white;
+
     padding:35px;
+
     border-radius:20px;
+
     box-shadow:0 15px 35px rgba(0,0,0,0.2);
 
 }
@@ -102,9 +97,13 @@ input,
 select{
 
     width:100%;
+
     padding:12px;
+
     border:2px solid #e5e7eb;
+
     border-radius:10px;
+
     font-size:15px;
 
 }
@@ -113,6 +112,7 @@ input:focus,
 select:focus{
 
     outline:none;
+
     border-color:#2563eb;
 
 }
@@ -120,14 +120,23 @@ select:focus{
 .btn{
 
     width:100%;
+
     padding:14px;
+
     border:none;
+
     border-radius:10px;
+
     background:#2563eb;
+
     color:white;
+
     font-size:16px;
+
     font-weight:600;
+
     cursor:pointer;
+
     transition:0.3s;
 
 }
@@ -141,10 +150,15 @@ select:focus{
 .back{
 
     display:block;
+
     text-align:center;
+
     margin-top:15px;
+
     text-decoration:none;
+
     color:#2563eb;
+
     font-weight:600;
 
 }
@@ -169,7 +183,7 @@ select:focus{
 
 <div class="input-group">
 
-<label>Name</label>
+<label>Full Name</label>
 
 <input
 type="text"
@@ -181,7 +195,7 @@ required>
 
 <div class="input-group">
 
-<label>Email</label>
+<label>Email Address</label>
 
 <input
 type="email"
@@ -197,14 +211,12 @@ required>
 
 <select name="role">
 
-<option
-value="admin"
+<option value="admin"
 <?php if($user['role']=="admin") echo "selected"; ?>>
 Admin
 </option>
 
-<option
-value="user"
+<option value="user"
 <?php if($user['role']=="user") echo "selected"; ?>>
 User
 </option>
