@@ -1,10 +1,14 @@
 <?php
+    $conn = mysqli_connect(
 
-$conn = mysqli_connect(
     "localhost",
+
     "root",
+
     "",
-    "user_management"
+
+    "bookstore_db"
+
 );
 
 if(!$conn){
