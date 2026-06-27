@@ -115,12 +115,211 @@ Login
 
 <div class="hero-image">
 
-<img src="images/hero.jpg" alt="BookStore">
+<img src="book.jpg" alt="BookStore">
+
+</div>
+
+</section>
+<!-- ================= FEATURED BOOKS ================= -->
+
+<section class="featured-books">
+
+<h2>Featured Books</h2>
+
+<p>Explore our latest collection</p>
+
+<div class="book-container">
+
+<?php
+
+$result = mysqli_query($conn,"SELECT * FROM books LIMIT 4");
+
+while($row = mysqli_fetch_assoc($result)){
+
+?>
+
+<div class="book-card">
+
+<img src="images/book.jpg" alt="Book">
+
+<h3><?php echo $row['book_name']; ?></h3>
+
+<p><strong>Author:</strong> <?php echo $row['author']; ?></p>
+
+<p class="price">₹<?php echo $row['price']; ?></p>
+
+<p><?php echo $row['category']; ?></p>
+
+<a href="books.php" class="view-btn">
+View Details
+</a>
+
+</div>
+
+<?php
+
+}
+
+?>
+
+</div>
+
+</section>
+<!-- ================= FEATURED BOOKS ================= -->
+
+<section class="featured-books">
+
+<h2>Featured Books</h2>
+
+<p>Explore our latest collection</p>
+
+<div class="book-container">
+
+<?php
+
+$result = mysqli_query($conn,"SELECT * FROM books LIMIT 4");
+
+while($row = mysqli_fetch_assoc($result)){
+
+?>
+
+<div class="book-card">
+
+<img src="book.jp" alt="Book">
+
+<h3><?php echo $row['book_name']; ?></h3>
+
+<p><strong>Author:</strong> <?php echo $row['author']; ?></p>
+
+<p class="price">₹<?php echo $row['price']; ?></p>
+
+<p><?php echo $row['category']; ?></p>
+
+<a href="books.php" class="view-btn">
+View Details
+</a>
+
+</div>
+
+<?php
+
+}
+
+?>
+
+</div>
+
+</section>
+<!-- ================= CATEGORIES ================= -->
+
+<section class="categories">
+
+<h2>Book Categories</h2>
+
+<div class="category-container">
+
+<div class="category-card">
+💻
+<h3>Programming</h3>
+</div>
+
+<div class="category-card">
+📖
+<h3>Novel</h3>
+</div>
+
+<div class="category-card">
+🧪
+<h3>Science</h3>
+</div>
+
+<div class="category-card">
+🏛
+<h3>History</h3>
+</div>
+
+<div class="category-card">
+👤
+<h3>Biography</h3>
+</div>
+
+<div class="category-card">
+📚
+<h3>Education</h3>
+</div>
+
+</div>
+
+</section>
+<!-- ================= WHY CHOOSE US ================= -->
+
+<section class="why">
+
+<h2>Why Choose Our BookStore?</h2>
+
+<div class="why-container">
+
+<div class="why-card">
+
+📚
+
+<h3>Huge Collection</h3>
+
+<p>
+
+Thousands of books from every category.
+
+</p>
+
+</div>
+
+<div class="why-card">
+
+🔒
+
+<h3>Secure Login</h3>
+
+<p>
+
+Safe and secure authentication system.
+
+</p>
+
+</div>
+
+<div class="why-card">
+
+⚡
+
+<h3>Fast Search</h3>
+
+<p>
+
+Find your favourite books instantly.
+
+</p>
+
+</div>
+
+<div class="why-card">
+
+📱
+
+<h3>Responsive Design</h3>
+
+<p>
+
+Works perfectly on mobile and desktop.
+
+</p>
+
+</div>
 
 </div>
 
 </section>
 
+<link rel="stylesheet" href="style.css">
 <script src="js/script.js"></script>
 
 </body>
