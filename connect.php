@@ -7,7 +7,7 @@
 
     "",
 
-    "bookstore_db"
+  "bookstore_db"
 
 );
 
