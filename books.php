@@ -1,24 +1,18 @@
 <?php
+session_start();
 include "connect.php";
 
-$search = "";
+$cartCount = 0;
 
-if(isset($_GET['search'])){
-    $search = mysqli_real_escape_string($conn,$_GET['search']);
+if(isset($_SESSION['cart'])){
+    $cartCount = count($_SESSION['cart']);
 }
 
-$sql = "SELECT * FROM books
-WHERE
-book_name LIKE '%$search%'
-OR author LIKE '%$search%'
-OR category LIKE '%$search%'
-ORDER BY id DESC";
+$books = mysqli_query($conn,"SELECT * FROM books");
 
-$result = mysqli_query($conn,$sql);
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 
@@ -28,150 +22,16 @@ $result = mysqli_query($conn,$sql);
 <title>Smart BookStore</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="books.css">
 
-<style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
-
-body{
-background:#f4f6f9;
-}
-
-.container{
-width:95%;
-max-width:1400px;
-margin:40px auto;
-}
-
-.header{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:35px;
-
-}
-
-.logo{
-
-font-size:38px;
-font-weight:bold;
-color:#2563eb;
-
-}
-
-.right-buttons{
-
-display:flex;
-gap:15px;
-
-}
-
-.dashboard-btn,
-.cart-btn{
-
-padding:12px 25px;
-text-decoration:none;
-color:white;
-border-radius:10px;
-font-weight:600;
-
-}
-
-.dashboard-btn{
-
-background:#2563eb;
-
-}
-
-.cart-btn{
-
-background:#16a34a;
-
-}
-
-.search-box{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:35px;
-
-}
-
-.search-box h2{
-
-font-size:34px;
-color:#111827;
-
-}
-
-.search-box form{
-
-display:flex;
-gap:10px;
-
-}
-
-.search-box input{
-
-width:350px;
-padding:12px;
-border:2px solid #2563eb;
-border-radius:8px;
-font-size:16px;
-
-}
-
-.search-box button{
-
-padding:12px 20px;
-background:#2563eb;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-
-}
-
-.search-box button:hover{
-
-background:#1d4ed8;
-
-}
-.discount{
-
-position:absolute;
-background:#ef4444;
-color:white;
-padding:8px 15px;
-border-radius:0 0 10px 0;
-font-weight:bold;
-
-}
-
-.book-card{
-
-position:relative;
-
-}
-
-</style>
+<link rel="stylesheet" href="book.css">
 
 </head>
 
 <body>
-
-<div class="container">
-
-<div class="header">
+    <header class="header">
 
 <div class="logo">
 
@@ -179,11 +39,13 @@ position:relative;
 
 </div>
 
-<div class="right-buttons">
+<div class="header-buttons">
 
 <a href="cart.php" class="cart-btn">
 
-🛒 My Cart
+<i class="fa fa-shopping-cart"></i>
+
+My Cart (<?php echo $cartCount; ?>)
 
 </a>
 
@@ -195,160 +57,180 @@ position:relative;
 
 </div>
 
+</header>
+<section class="hero">
+
+<div>
+
+<h1>
+
+📖 Available Books
+
+</h1>
+
+<p>
+
+Choose your favourite books and enjoy reading.
+
+</p>
+
 </div>
 
-<div class="search-box">
-
-<h2>Available Books</h2>
-
-<form method="GET">
+<div>
 
 <input
+
 type="text"
-name="search"
-placeholder="Search Books..."
-value="<?php echo $search; ?>">
 
-<button>
+id="search"
 
-🔍 Search
-
-</button>
-
-</form>
+placeholder="Search books, authors or categories...">
 
 </div>
-<div class="book-container">
 
-<?php
+</section>
+<div class="categories">
 
-if(mysqli_num_rows($result)>0){
+<button class="category active" data-category="All">
+All Categories
+</button>
 
-while($row=mysqli_fetch_assoc($result)){
+<button class="category" data-category="Programming">
+Programming
+</button>
 
-?>
+<button class="category" data-category="Web Development">
+Web Development
+</button>
+
+<button class="category" data-category="Database">
+Database
+</button>
+
+<button class="category" data-category="Networking">
+Networking
+</button>
+
+<button class="category" data-category="Others">
+Others
+</button>
+
+</div>
+
+
+   <div class="book-container">
+
+<?php while($row = mysqli_fetch_assoc($books)){ ?>
 
 <div class="book-card">
 
-<div class="book-image">
-<div class="discount">
+    <div class="discount">
+        20% OFF
+    </div>
 
-20% OFF
+    <img
+    src="images/<?php echo $row['image']; ?>"
+    class="book-image"
+    alt="<?php echo $row['book_name']; ?>">
+
+    <h3>
+        <?php echo $row['book_name']; ?>
+    </h3>
+
+    <p class="author">
+        <?php echo $row['author']; ?>
+    </p>
+
+    <div class="rating">
+        ★★★★★
+    </div>
+
+    <h2>
+        ₹<?php echo $row['price']; ?>
+    </h2>
+
+    <p class="stock">
+        ✔ In Stock
+    </p>
+
+    <div class="book-actions">
+
+        <a
+        href="add_to_cart.php?id=<?php echo $row['id']; ?>"
+        class="cart-button">
+
+        🛒 Add To Cart
+
+        </a>
+
+        <button class="wishlist">
+            ❤
+        </button>
+
+    </div>
 
 </div>
-<?php
 
-if(!empty($row['image'])){
-
-?>
-
-<img src="<?php echo $row['image']; ?>" alt="Book">
-
-<?php
-
-}else{
-
-?>
-
-<img src="images/book.png" alt="Book">
-
-<?php
-
-}
-
-?>
+<?php } ?>
 
 </div>
 
-<div class="book-details">
+<div class="pagination">
 
-<h3>
+<button>⬅ Previous</button>
 
-<?php echo $row['book_name']; ?>
+<button class="active">1</button>
 
-</h3>
+<button>2</button>
 
-<p class="author">
+<button>3</button>
 
-✍ Author :
-<b><?php echo $row['author']; ?></b>
+<button>Next ➜</button>
 
-</p>
+</div>
+<footer>
 
-<p class="category">
+<div class="footer">
 
-📂 <?php echo $row['category']; ?>
+<h2>
 
-</p>
-
-<p class="description">
-
-<?php echo $row['description']; ?>
-
-</p>
-
-<h2 class="price">
-
-₹<?php echo $row['price']; ?>
-<p style="color:#16a34a;font-weight:bold;">
-
-🚚 Free Delivery
-
-</p>
+📚 Smart BookStore
 
 </h2>
 
-<div class="rating">
+<p>
 
-⭐⭐⭐⭐⭐
+Your favourite destination for books.
 
-</div>
+</p>
 
-<div class="buttons">
+<div class="social">
 
-<a
-href="add_to_cart.php?id=<?php echo $row['id']; ?>"
-class="buy-btn">
+<a href="#">📘</a>
 
-🛒 Add To Cart
+<a href="#">📸</a>
 
-</a>
+<a href="#">🐦</a>
 
-<a href="#" class="wishlist-btn">
-
-❤ Wishlist
-
-</a>
+<a href="#">💼</a>
 
 </div>
 
-</div>
+<p>
+
+© 2026 Smart BookStore
+
+</p>
 
 </div>
 
-<?php
+</footer>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+ <script src="books.js"></script> 
+ <div id="toast">
 
-}
-
-}else{
-
-?>
-
-<h2 style="text-align:center;color:#555;">
-
-No Books Found
-
-</h2>
-
-<?php
-
-}
-
-?>
+✅ Book Added To Cart
 
 </div>
-</div>
-
 </body>
-
 </html>

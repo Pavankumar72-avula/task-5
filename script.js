@@ -19,3 +19,14 @@ card.style.transform="translateY(0)";
 });
 
 });
+$(".cart-button").click(function(){
+
+$("#toast").fadeIn();
+
+setTimeout(function(){
+
+$("#toast").fadeOut();
+
+},2000);
+
+});

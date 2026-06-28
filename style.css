@@ -252,11 +252,123 @@ header {
 /* ===========================
    FEATURED BOOKS (SINGLE SECTION)
 =========================== */
+.featured-books{
 
-.featured-books {
-    padding: 90px 8%;
-    background: #ffffff;
+padding:80px 8%;
+background:#f4f7fc;
+
 }
+
+.book-grid{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+
+}
+
+.book-card{
+
+background:#fff;
+border-radius:18px;
+padding:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+transition:.3s;
+position:relative;
+overflow:hidden;
+
+}
+
+.book-card:hover{
+
+transform:translateY(-10px);
+
+}
+
+.discount{
+
+position:absolute;
+top:15px;
+left:15px;
+
+background:#ff4d4d;
+
+color:#fff;
+
+padding:6px 12px;
+
+border-radius:8px;
+
+font-size:14px;
+
+font-weight:bold;
+
+}
+
+.book-image{
+
+width:180px;
+height:240px;
+object-fit:cover;
+display:block;
+margin:25px auto;
+
+}
+
+.book-card h3{
+
+font-size:22px;
+margin:10px 0;
+
+}
+
+.author{
+
+color:#666;
+
+}
+
+.rating{
+
+color:#ff9800;
+font-size:20px;
+margin:10px 0;
+
+}
+
+.stock{
+
+color:#0a9b5b;
+font-weight:bold;
+margin:10px 0;
+
+}
+
+.book-actions{
+
+margin-top:15px;
+
+}
+
+.cart-button{
+
+display:block;
+background:#2563eb;
+color:#fff;
+text-align:center;
+padding:12px;
+border-radius:10px;
+text-decoration:none;
+font-weight:600;
+
+}
+
+.cart-button:hover{
+
+background:#1d4ed8;
+
+}
+
 
 .section-title {
     text-align: center;

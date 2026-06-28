@@ -63,39 +63,98 @@ include "connect.php";
     </section>
 
     <!-- FEATURED BOOKS SECTION - APPEARS ONLY ONCE -->
-    <section class="featured-books">
-        <div class="section-title">
-            <h2>Featured Books</h2>
-            <p>Discover our latest collection of books</p>
-        </div>
-        
-        <span class="badge">Latest</span>
+  <section class="featured-books">
 
-        <div class="book-grid">
-            <?php
-            $result = mysqli_query($conn, "SELECT * FROM books LIMIT 4");
-            
-            while($row = mysqli_fetch_assoc($result)) {
-                ?>
-                <div class="book-card">
-                    <img src="images/book.png" alt="Book">
-                    
-                    <h3><?php echo $row['book_name']; ?></h3>
-                    
-                    <p><strong>Author:</strong> <?php echo $row['author']; ?></p>
-                    
-                    <p class="category"><?php echo $row['category']; ?></p>
-                    
-                    <h4>₹<?php echo $row['price']; ?></h4>
-                    
-                    <a href="books.php" class="book-btn">View Details</a>
-                </div>
-                <?php
-            }
-            ?>
-        </div>
-    </section>
+<div class="section-title">
 
+<h2>Featured Books</h2>
+
+<p>Best Selling Books</p>
+
+</div>
+
+<div class="book-grid">
+
+<?php
+
+$result = mysqli_query($conn,"SELECT * FROM books LIMIT 8");
+
+while($row=mysqli_fetch_assoc($result)){
+
+?>
+
+<div class="book-card">
+
+<div class="discount">
+20% OFF
+</div>
+
+<img
+src="images/<?php echo $row['image']; ?>"
+class="book-image"
+alt="<?php echo $row['book_name']; ?>">
+
+<h3>
+
+<?php echo $row['book_name']; ?>
+
+</h3>
+
+<p class="author">
+
+<?php echo $row['author']; ?>
+
+</p>
+
+<div class="rating">
+
+★★★★★
+
+</div>
+
+<h2>
+
+₹<?php echo $row['price']; ?>
+
+</h2>
+
+<p class="stock">
+
+✔ In Stock
+
+</p>
+
+<div class="book-actions">
+
+<a
+href="books.php"
+class="cart-button">
+
+🛒 Buy Now
+
+</a>
+
+</div>
+
+</div>
+
+<?php
+}
+?>
+
+</div>
+
+<div style="text-align:center;margin-top:40px;">
+
+<a href="books.php" class="browse-btn">
+
+View All Books →
+
+</a>
+
+</div>
+
+</section>
     <!-- CATEGORIES SECTION -->
     <section class="categories">
         <h2>Book Categories</h2>

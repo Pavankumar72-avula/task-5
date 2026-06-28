@@ -22,17 +22,18 @@ if(isset($_POST['place_order'])){
 
         mysqli_query($conn,"
         INSERT INTO orders
-        (user_name,phone,address,book_name,price)
+        (user_name,user_email,phone,address,book_name,price)
 
-        VALUES
-
-        ('$name',
-        '$phone',
-        '$address',
-        '".$book['book_name']."',
-        '".$book['price']."')
+       VALUES
+(
+'$name',
+'".$_SESSION['user_email']."',
+'$phone',
+'$address',
+'".$book['book_name']."',
+'".$book['price']."'
+)
         ");
-
     }
 
     $_SESSION['cart']=[];

@@ -4,56 +4,84 @@ include "connect.php";
 
 $search = "";
 
+$category = "All";
+
 if(isset($_POST['search'])){
-    $search = mysqli_real_escape_string($conn, $_POST['search']);
+    $search = $_POST['search'];
 }
 
-$query = "SELECT * FROM books
-WHERE
+if(isset($_POST['category'])){
+    $category = $_POST['category'];
+}
+
+$sql = "SELECT * FROM books WHERE
 book_name LIKE '%$search%'
 OR author LIKE '%$search%'
-OR category LIKE '%$search%'
-ORDER BY id DESC";
+OR category LIKE '%$search%'";
 
-$result = mysqli_query($conn, $query);
+if($category!="All"){
+    $sql .= " AND category='$category'";
+}
 
-while($row = mysqli_fetch_assoc($result)){
+$result = mysqli_query($conn,$sql);
+
+while($row=mysqli_fetch_assoc($result)){
+
 ?>
 
-<tr>
+<div class="book-card">
 
-<td><?php echo $row['id']; ?></td>
+<div class="discount">
 
-<td><?php echo $row['book_name']; ?></td>
+20% OFF
 
-<td><?php echo $row['author']; ?></td>
+</div>
 
-<td>₹<?php echo $row['price']; ?></td>
+<img
+src="images/books/<?php echo $row['image'];?>"
+class="book-image">
 
-<td><?php echo $row['category']; ?></td>
+<h3>
 
-<td><?php echo $row['description']; ?></td>
+<?php echo $row['book_name'];?>
 
-<td style="display:flex;gap:10px;justify-content:center;">
+</h3>
 
-<a href="book_details.php?id=<?php echo $row['id']; ?>" class="view-btn">
-👁 View
+<p class="author">
+
+<?php echo $row['author'];?>
+
+</p>
+
+<div class="rating">
+
+★★★★★
+
+</div>
+
+<h2>
+
+₹<?php echo $row['price'];?>
+
+</h2>
+
+<p class="stock">
+
+✔ In Stock
+
+</p>
+
+<a
+href="add_to_cart.php?id=<?php echo $row['id'];?>"
+class="cart-button">
+
+🛒 Add To Cart
+
 </a>
 
-<a href="edit_book.php?id=<?php echo $row['id']; ?>" class="edit-btn">
-✏ Edit
-</a>
-
-<a href="delete_book.php?id=<?php echo $row['id']; ?>"
-class="delete-btn"
-onclick="return confirm('Delete this book?')">
-🗑 Delete
-</a>
-
-</td>
-
-</tr>
+</div>
 
 <?php
+
 }
 ?>

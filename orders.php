@@ -1,8 +1,14 @@
 <?php
-
+session_start();
 include "connect.php";
+$email = $_SESSION['user_email'];
 
-$result = mysqli_query($conn,"SELECT * FROM orders ORDER BY id DESC");
+$result = mysqli_query(
+$conn,
+"SELECT * FROM orders
+WHERE user_email='$email'
+ORDER BY id DESC"
+);
 
 ?>
 
@@ -64,7 +70,39 @@ color:#2563eb;
 
 <body>
 
-<h1>📦 Order History</h1>
+<h1>
+
+📦 My Orders
+
+</h1>
+
+<p>
+
+Welcome,
+
+<b>
+
+<?php echo $_SESSION['user_name']; ?>
+
+</b>
+
+</p>
+
+<br>
+<a href="books.php"
+style="
+background:#2563eb;
+color:white;
+padding:12px 20px;
+text-decoration:none;
+border-radius:8px;
+display:inline-block;
+margin-bottom:20px;
+">
+
+📚 Continue Shopping
+
+</a>
 
 <table>
 
