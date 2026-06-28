@@ -19,19 +19,32 @@ if(isset($_POST['login'])){
 
         if(password_verify($password,$user['password'])){
 
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['name'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['role'] = $user['role'];
+    // Check email verification
+    if($user['is_verified'] == 0){
 
-            header("Location: dashboard.php");
-            exit();
+        echo "<script>
+        alert('Please verify your email before logging in.');
+        window.location='verify_otp.php?email=".$user['email']."';
+        </script>";
+        exit();
 
-        }else{
+    }
 
-            echo "Wrong Password";
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['user_name'] = $user['name'];
+    $_SESSION['user_email'] = $user['email'];
+    $_SESSION['role'] = $user['role'];
 
-        }
+    header("Location: dashboard.php");
+    exit();
+
+}else{
+
+    echo "<script>
+    alert('Wrong Password');
+    </script>";
+
+}
 
     }else{
 

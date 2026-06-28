@@ -1,6 +1,7 @@
 <?php
 
 include "connect.php";
+include "mail_config.php";
 
 if(isset($_POST['register'])){
 
@@ -24,32 +25,46 @@ if(isset($_POST['register'])){
             $password,
             PASSWORD_DEFAULT
         );
+        $otp = rand(100000,999999);
 
-        $sql = "INSERT INTO users
-        (name,email,password,role)
+      $sql = "INSERT INTO users
+(name,email,password,role,otp,is_verified)
 
-        VALUES
+VALUES
 
-        ('$name','$email','$hashed_password','$role')";
+('$name',
+ '$email',
+ '$hashed_password',
+ '$role',
+ '$otp',
+ 0)";
 
-        if(mysqli_query($conn,$sql)){
+      if(mysqli_query($conn,$sql)){
 
-            echo "<script>
-            alert('Registration Successful');
-            window.location='login.php';
-            </script>";
+    if(sendOTP($email,$otp)){
 
-        }else{
+        header("Location: verify_otp.php?email=".$email);
+        exit();
+
+    }else{
+
+        echo "<script>
+        alert('OTP Email Sending Failed');
+        </script>";
+
+    }
+    }else{
 
             echo "<script>
             alert('Registration Failed');
             </script>";
 
         }
-
     }
-
 }
+
+    
+    
 
 ?>
 

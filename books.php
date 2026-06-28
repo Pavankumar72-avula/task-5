@@ -18,6 +18,9 @@ $conn,
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Book Management</title>
+<ul>
+    <li><a href="index.php#contact">Contact</a></li>
+</ul>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -221,6 +224,75 @@ tr:hover{
     background:#1d4ed8;
 
 }
+.action-buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    flex-wrap:nowrap;
+
+}
+
+.view-btn,
+.edit-btn,
+.delete-btn{
+
+    display:inline-block;
+
+    padding:8px 14px;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    color:white;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+}
+
+.view-btn{
+
+    background:#2563eb;
+
+}
+
+.view-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+.edit-btn{
+
+    background:#f59e0b;
+
+}
+
+.edit-btn:hover{
+
+    background:#d97706;
+
+}
+
+.delete-btn{
+
+    background:#dc2626;
+
+}
+
+.delete-btn:hover{
+
+    background:#b91c1c;
+
+}
 
 </style>
 
@@ -266,6 +338,65 @@ Total Books:
 <?php echo mysqli_num_rows($result); ?>
 
 </div>
+<?php
+
+include "connect.php";
+
+$search = "";
+
+if(isset($_POST['search'])){
+    $search = mysqli_real_escape_string($conn, $_POST['search']);
+}
+
+$query = "SELECT * FROM books
+WHERE
+book_name LIKE '%$search%'
+OR author LIKE '%$search%'
+OR category LIKE '%$search%'
+ORDER BY id DESC";
+
+$result = mysqli_query($conn, $query);
+
+while($row = mysqli_fetch_assoc($result)){
+?>
+
+<tr>
+
+<td><?php echo $row['id']; ?></td>
+
+<td><?php echo $row['book_name']; ?></td>
+
+<td><?php echo $row['author']; ?></td>
+
+<td>₹<?php echo $row['price']; ?></td>
+
+<td><?php echo $row['category']; ?></td>
+
+<td><?php echo $row['description']; ?></td>
+
+<td style="display:flex;gap:10px;justify-content:center;">
+
+<a href="book_details.php?id=<?php echo $row['id']; ?>" class="view-btn">
+👁 View
+</a>
+
+<a href="edit_book.php?id=<?php echo $row['id']; ?>" class="edit-btn">
+✏ Edit
+</a>
+
+<a href="delete_book.php?id=<?php echo $row['id']; ?>"
+class="delete-btn"
+onclick="return confirm('Delete this book?')">
+🗑 Delete
+</a>
+
+</td>
+
+</tr>
+
+<?php
+}
+?>
 
 <div class="table-box">
 
@@ -289,6 +420,8 @@ Total Books:
 
 </tr>
 
+<tbody id="bookTable">
+
 <?php
 
 mysqli_data_seek($result,0);
@@ -296,6 +429,7 @@ mysqli_data_seek($result,0);
 while($row=mysqli_fetch_assoc($result)){
 
 ?>
+</tbody>
 
 <tr>
 
@@ -325,6 +459,16 @@ while($row=mysqli_fetch_assoc($result)){
 
 <td>
 
+<div class="action-buttons">
+
+<a
+href="book_details.php?id=<?php echo $row['id']; ?>"
+class="view-btn">
+
+👁 View
+
+</a>
+
 <a
 href="edit_book.php?id=<?php echo $row['id']; ?>"
 class="edit-btn">
@@ -341,6 +485,54 @@ onclick="return confirm('Are you sure you want to delete this book?')">
 🗑 Delete
 
 </a>
+<form method="GET" style="margin-bottom:20px; display:flex; gap:10px;">
+
+<input
+type="text"
+name="search"
+placeholder="Search by Book, Author or Category"
+value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>"
+
+style="
+width:350px;
+padding:12px;
+border:2px solid #2563eb;
+border-radius:8px;
+font-size:16px;
+">
+
+<button
+type="submit"
+style="
+padding:12px 20px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+">
+
+🔍 Search
+
+</button>
+
+<a href="books.php"
+style="
+padding:12px 20px;
+background:#6b7280;
+color:white;
+text-decoration:none;
+border-radius:8px;
+">
+
+Reset
+
+</a>
+
+</form>
+
+</div>
 
 </td>
 
@@ -357,6 +549,38 @@ onclick="return confirm('Are you sure you want to delete this book?')">
 </div>
 
 </div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+
+$(document).ready(function(){
+
+    $("#search").keyup(function(){
+
+        var search = $(this).val();
+
+        $.ajax({
+
+            url:"search_books.php",
+
+            type:"POST",
+
+            data:{search:search},
+
+            success:function(data){
+
+                $("#bookTable").html(data);
+
+            }
+
+        });
+
+    });
+
+});
+
+</script>
+
 
 </body>
 </html>
