@@ -1,71 +1,119 @@
 <?php
+session_start();
 
 include "connect.php";
 include "mail_config.php";
 
+$showOTP = false;
+
+if(isset($_SESSION['showOTP'])){
+    $showOTP = true;
+}
+
+/*=========================
+SEND OTP
+==========================*/
+
 if(isset($_POST['register'])){
 
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
-
     $role = $_POST['role'];
 
     if($password != $confirm_password){
 
-        echo "<script>
-        alert('Passwords do not match');
-        </script>";
+        echo "<script>alert('Passwords do not match');</script>";
 
     }else{
 
-        $hashed_password = password_hash(
-            $password,
-            PASSWORD_DEFAULT
-        );
-        $otp = rand(100000,999999);
+        $check = mysqli_query($conn,
+        "SELECT * FROM users WHERE email='$email'");
 
-      $sql = "INSERT INTO users
-(name,email,password,role,otp,is_verified)
-
-VALUES
-
-('$name',
- '$email',
- '$hashed_password',
- '$role',
- '$otp',
- 0)";
-
-      if(mysqli_query($conn,$sql)){
-
-    if(sendOTP($email,$otp)){
-
-        header("Location: verify_otp.php?email=".$email);
-        exit();
-
-    }else{
-
-        echo "<script>
-        alert('OTP Email Sending Failed');
-        </script>";
-
-    }
-    }else{
+        if(mysqli_num_rows($check)>0){
 
             echo "<script>
-            alert('Registration Failed');
+            alert('Email already exists');
             </script>";
 
+        }else{
+
+            $otp = rand(100000,999999);
+
+            $_SESSION['otp'] = $otp;
+            $_SESSION['name'] = $name;
+            $_SESSION['email'] = $email;
+            $_SESSION['password'] = password_hash($password,PASSWORD_DEFAULT);
+            $_SESSION['role'] = $role;
+            $_SESSION['showOTP'] = true;
+
+            if(sendOTP($email,$otp)){
+
+                $showOTP = true;
+
+                echo "<script>
+                alert('OTP Sent Successfully');
+                </script>";
+
+            }else{
+
+                echo "<script>
+                alert('Unable to send OTP');
+                </script>";
+
+            }
+
         }
+
     }
+
 }
 
-    
-    
+/*=========================
+VERIFY OTP
+==========================*/
 
+if(isset($_POST['verify'])){
+
+    $showOTP = true;
+
+    if($_POST['otp']==$_SESSION['otp']){
+
+        $name = $_SESSION['name'];
+        $email = $_SESSION['email'];
+        $password = $_SESSION['password'];
+        $role = $_SESSION['role'];
+
+        mysqli_query($conn,
+        "INSERT INTO users
+        (name,email,password,role,is_verified)
+
+        VALUES
+
+        ('$name',
+        '$email',
+        '$password',
+        '$role',
+        1)");
+
+        session_unset();
+        session_destroy();
+
+        echo "<script>
+        alert('Registration Successful');
+        window.location='login.php';
+        </script>";
+
+    }else{
+
+        echo "<script>
+        alert('Invalid OTP');
+        </script>";
+
+    }
+
+}
 ?>
 
 <!DOCTYPE html>
@@ -255,17 +303,51 @@ User
 
 <option value="admin">
 Admin
-</option>
 
 </select>
+
+<?php if(!$showOTP){ ?>
 
 <button
 type="submit"
 name="register">
 
-Register
+Send OTP
 
 </button>
+
+<?php } ?>
+<?php if($showOTP){ ?>
+
+<hr style="margin:20px 0;">
+
+<h3 style="text-align:center;color:#2563eb;">
+Email Verification
+</h3>
+
+<p style="text-align:center;font-size:14px;color:#666;">
+Enter the OTP sent to your email.
+</p>
+
+<input
+type="text"
+name="otp"
+placeholder="Enter 6-digit OTP"
+maxlength="6"
+required>
+
+<button
+type="submit"
+name="verify">
+
+Verify OTP & Register
+
+</button>
+
+<?php } ?>
+
+</button>
+
 
 </form>
 

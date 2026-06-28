@@ -423,12 +423,12 @@ Manage your bookstore from here.
 
 </a>
 
-<a href="add_book.php" class="manage" style="background:#f59e0b;">
+<!-- <a href="add_book.php" class="manage" style="background:#f59e0b;">
 
 ➕ Add Book
 
 </a>
-
+ -->
 <a href="index.php" class="manage" style="background:#7c3aed;">
 
 🏠 Home
@@ -451,6 +451,11 @@ Manage your bookstore from here.
 
 </a>
 
+<a href="orders.php" class="manage" style="background:#16a34a;">
+
+📦 My Orders
+
+</a>
 </div>
 
 </div>

@@ -1,0 +1,251 @@
+/*================ BOOK CARDS =================*/
+
+.book-container {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+    gap: 30px;
+
+    margin-top: 20px;
+
+}
+
+.book-card {
+
+    background: #fff;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .12);
+
+    transition: .3s;
+
+}
+
+.book-card:hover {
+
+    transform: translateY(-8px);
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .18);
+
+}
+
+.book-image {
+
+    height: 300px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: #f8fafc;
+
+}
+
+.book-image img {
+
+    width: 180px;
+
+    height: 250px;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+
+}
+
+.book-details {
+
+    padding: 20px;
+
+}
+
+.book-details h3 {
+
+    font-size: 22px;
+
+    color: #111827;
+
+    margin-bottom: 10px;
+
+}
+
+.author {
+
+    color: #4b5563;
+
+    margin-bottom: 8px;
+
+}
+
+.category {
+
+    display: inline-block;
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+
+    margin-bottom: 12px;
+
+}
+
+.description {
+
+    color: #6b7280;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    height: 70px;
+
+    overflow: hidden;
+
+    margin-bottom: 15px;
+
+}
+
+.price {
+
+    color: #16a34a;
+
+    font-size: 28px;
+
+    margin-bottom: 10px;
+
+}
+
+.rating {
+
+    font-size: 20px;
+
+    margin-bottom: 18px;
+
+}
+
+.buttons {
+
+    display: flex;
+
+    gap: 12px;
+
+}
+
+.buy-btn {
+
+    flex: 1;
+
+    background: #2563eb;
+
+    color: white;
+
+    padding: 12px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+
+    transition: .3s;
+
+}
+
+.buy-btn:hover {
+
+    background: #1d4ed8;
+
+}
+
+.wishlist-btn {
+
+    flex: 1;
+
+    background: #ef4444;
+
+    color: white;
+
+    padding: 12px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+
+    transition: .3s;
+
+}
+
+.wishlist-btn:hover {
+
+    background: #dc2626;
+
+}
+
+/*============== MOBILE ==============*/
+
+@media(max-width:768px) {
+
+    .search-box {
+
+        flex-direction: column;
+
+        gap: 20px;
+
+    }
+
+    .search-box input {
+
+        width: 100%;
+
+    }
+
+    .header {
+
+        flex-direction: column;
+
+        gap: 20px;
+
+    }
+
+    .right-buttons {
+
+        width: 100%;
+
+        justify-content: center;
+
+    }
+
+    .book-image {
+
+        height: 250px;
+
+    }
+
+    .book-image img {
+
+        width: 150px;
+
+        height: 210px;
+
+    }
+
+}

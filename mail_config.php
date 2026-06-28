@@ -3,9 +3,9 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'src/Exception.php';
-require 'src/PHPMailer.php';
-require 'src/SMTP.php';
+require_once __DIR__ . '/src/Exception.php';
+require_once __DIR__ . '/src/PHPMailer.php';
+require_once __DIR__ . '/src/SMTP.php';
 
 function sendOTP($toEmail, $otp){
 
@@ -27,7 +27,7 @@ function sendOTP($toEmail, $otp){
 
         $mail->Port = 587;
 
-        $mail->setFrom('YOUR_GMAIL@gmail.com', 'Smart BookStore');
+        $mail->setFrom('pavanavula2005@gmail.com', 'Smart BookStore');
 
         $mail->addAddress($toEmail);
 

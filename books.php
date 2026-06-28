@@ -1,12 +1,20 @@
 <?php
-
 include "connect.php";
 
-$result = mysqli_query(
-$conn,
-"SELECT * FROM books"
-);
+$search = "";
 
+if(isset($_GET['search'])){
+    $search = mysqli_real_escape_string($conn,$_GET['search']);
+}
+
+$sql = "SELECT * FROM books
+WHERE
+book_name LIKE '%$search%'
+OR author LIKE '%$search%'
+OR category LIKE '%$search%'
+ORDER BY id DESC";
+
+$result = mysqli_query($conn,$sql);
 ?>
 
 <!DOCTYPE html>
@@ -17,280 +25,141 @@ $conn,
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Book Management</title>
-<ul>
-    <li><a href="index.php#contact">Contact</a></li>
-</ul>
+<title>Smart BookStore</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="books.css">
 
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
 }
 
 body{
-
-    background:#f3f4f6;
-
-    min-height:100vh;
-
-    padding:40px;
-
+background:#f4f6f9;
 }
 
 .container{
-
-    max-width:1200px;
-
-    margin:auto;
-
+width:95%;
+max-width:1400px;
+margin:40px auto;
 }
 
 .header{
 
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:35px;
 
 }
 
-.title{
+.logo{
 
-    color:#111827;
-
-    font-size:32px;
-
-}
-
-.add-btn{
-
-    background:#10b981;
-
-    color:white;
-
-    text-decoration:none;
-
-    padding:12px 20px;
-
-    border-radius:10px;
-
-    font-weight:600;
-
-    transition:0.3s;
+font-size:38px;
+font-weight:bold;
+color:#2563eb;
 
 }
 
-.add-btn:hover{
+.right-buttons{
 
-    background:#059669;
-
-}
-
-.book-count{
-
-    margin-bottom:15px;
-
-    font-size:18px;
-
-    font-weight:600;
-
-    color:#374151;
+display:flex;
+gap:15px;
 
 }
 
-.table-box{
+.dashboard-btn,
+.cart-btn{
 
-    background:white;
-
-    border-radius:15px;
-
-    overflow:hidden;
-
-    box-shadow:0 8px 20px rgba(0,0,0,0.1);
-
-}
-
-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-}
-
-th{
-
-    background:#2563eb;
-
-    color:white;
-
-    padding:16px;
-
-}
-
-td{
-
-    padding:16px;
-
-    text-align:center;
-
-    border-bottom:1px solid #e5e7eb;
-
-}
-
-tr:hover{
-
-    background:#f9fafb;
-
-}
-
-.edit-btn{
-
-    background:#f59e0b;
-
-    color:white;
-
-    text-decoration:none;
-
-    padding:8px 16px;
-
-    border-radius:8px;
-
-    margin-right:10px;
-
-    font-weight:500;
-
-    transition:0.3s;
-
-}
-
-.edit-btn:hover{
-
-    background:#d97706;
-
-}
-
-.delete-btn{
-
-    background:#dc2626;
-
-    color:white;
-
-    text-decoration:none;
-
-    padding:8px 16px;
-
-    border-radius:8px;
-
-    font-weight:500;
-
-    transition:0.3s;
-
-}
-
-.delete-btn:hover{
-
-    background:#b91c1c;
+padding:12px 25px;
+text-decoration:none;
+color:white;
+border-radius:10px;
+font-weight:600;
 
 }
 
 .dashboard-btn{
 
-    background:#2563eb;
-
-    color:white;
-
-    text-decoration:none;
-
-    padding:10px 18px;
-
-    border-radius:8px;
-
-    margin-left:10px;
+background:#2563eb;
 
 }
 
-.dashboard-btn:hover{
+.cart-btn{
 
-    background:#1d4ed8;
-
-}
-.action-buttons{
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:10px;
-
-    flex-wrap:nowrap;
+background:#16a34a;
 
 }
 
-.view-btn,
-.edit-btn,
-.delete-btn{
+.search-box{
 
-    display:inline-block;
-
-    padding:8px 14px;
-
-    border-radius:8px;
-
-    text-decoration:none;
-
-    color:white;
-
-    font-weight:600;
-
-    white-space:nowrap;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:35px;
 
 }
 
-.view-btn{
+.search-box h2{
 
-    background:#2563eb;
-
-}
-
-.view-btn:hover{
-
-    background:#1d4ed8;
+font-size:34px;
+color:#111827;
 
 }
 
-.edit-btn{
+.search-box form{
 
-    background:#f59e0b;
-
-}
-
-.edit-btn:hover{
-
-    background:#d97706;
+display:flex;
+gap:10px;
 
 }
 
-.delete-btn{
+.search-box input{
 
-    background:#dc2626;
+width:350px;
+padding:12px;
+border:2px solid #2563eb;
+border-radius:8px;
+font-size:16px;
 
 }
 
-.delete-btn:hover{
+.search-box button{
 
-    background:#b91c1c;
+padding:12px 20px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+
+}
+
+.search-box button:hover{
+
+background:#1d4ed8;
+
+}
+.discount{
+
+position:absolute;
+background:#ef4444;
+color:white;
+padding:8px 15px;
+border-radius:0 0 10px 0;
+font-weight:bold;
+
+}
+
+.book-card{
+
+position:relative;
 
 }
 
@@ -304,25 +173,21 @@ tr:hover{
 
 <div class="header">
 
-<h1 class="title">
+<div class="logo">
 
-📚 Book Management
+📚 Smart BookStore
 
-</h1>
+</div>
 
-<div>
+<div class="right-buttons">
 
-<a
-href="add_book.php"
-class="add-btn">
+<a href="cart.php" class="cart-btn">
 
-➕ Add New Book
+🛒 My Cart
 
 </a>
 
-<a
-href="dashboard.php"
-class="dashboard-btn">
+<a href="dashboard.php" class="dashboard-btn">
 
 🏠 Dashboard
 
@@ -332,211 +197,60 @@ class="dashboard-btn">
 
 </div>
 
-<div class="book-count">
+<div class="search-box">
 
-Total Books:
-<?php echo mysqli_num_rows($result); ?>
+<h2>Available Books</h2>
 
-</div>
-<?php
-
-include "connect.php";
-
-$search = "";
-
-if(isset($_POST['search'])){
-    $search = mysqli_real_escape_string($conn, $_POST['search']);
-}
-
-$query = "SELECT * FROM books
-WHERE
-book_name LIKE '%$search%'
-OR author LIKE '%$search%'
-OR category LIKE '%$search%'
-ORDER BY id DESC";
-
-$result = mysqli_query($conn, $query);
-
-while($row = mysqli_fetch_assoc($result)){
-?>
-
-<tr>
-
-<td><?php echo $row['id']; ?></td>
-
-<td><?php echo $row['book_name']; ?></td>
-
-<td><?php echo $row['author']; ?></td>
-
-<td>₹<?php echo $row['price']; ?></td>
-
-<td><?php echo $row['category']; ?></td>
-
-<td><?php echo $row['description']; ?></td>
-
-<td style="display:flex;gap:10px;justify-content:center;">
-
-<a href="book_details.php?id=<?php echo $row['id']; ?>" class="view-btn">
-👁 View
-</a>
-
-<a href="edit_book.php?id=<?php echo $row['id']; ?>" class="edit-btn">
-✏ Edit
-</a>
-
-<a href="delete_book.php?id=<?php echo $row['id']; ?>"
-class="delete-btn"
-onclick="return confirm('Delete this book?')">
-🗑 Delete
-</a>
-
-</td>
-
-</tr>
-
-<?php
-}
-?>
-
-<div class="table-box">
-
-<table>
-
-<tr>
-
-<th>ID</th>
-
-<th>Book Name</th>
-
-<th>Author</th>
-
-<th>Price</th>
-
-<th>Category</th>
-
-<th>Description</th>
-
-<th>Action</th>
-
-</tr>
-
-<tbody id="bookTable">
-
-<?php
-
-mysqli_data_seek($result,0);
-
-while($row=mysqli_fetch_assoc($result)){
-
-?>
-</tbody>
-
-<tr>
-
-<td>
-<?php echo $row['id']; ?>
-</td>
-
-<td>
-<?php echo $row['book_name']; ?>
-</td>
-
-<td>
-<?php echo $row['author']; ?>
-</td>
-
-<td>
-₹<?php echo $row['price']; ?>
-</td>
-
-<td>
-<?php echo $row['category']; ?>
-</td>
-
-<td>
-<?php echo $row['description']; ?>
-</td>
-
-<td>
-
-<div class="action-buttons">
-
-<a
-href="book_details.php?id=<?php echo $row['id']; ?>"
-class="view-btn">
-
-👁 View
-
-</a>
-
-<a
-href="edit_book.php?id=<?php echo $row['id']; ?>"
-class="edit-btn">
-
-✏ Edit
-
-</a>
-
-<a
-href="delete_book.php?id=<?php echo $row['id']; ?>"
-class="delete-btn"
-onclick="return confirm('Are you sure you want to delete this book?')">
-
-🗑 Delete
-
-</a>
-<form method="GET" style="margin-bottom:20px; display:flex; gap:10px;">
+<form method="GET">
 
 <input
 type="text"
 name="search"
-placeholder="Search by Book, Author or Category"
-value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>"
+placeholder="Search Books..."
+value="<?php echo $search; ?>">
 
-style="
-width:350px;
-padding:12px;
-border:2px solid #2563eb;
-border-radius:8px;
-font-size:16px;
-">
-
-<button
-type="submit"
-style="
-padding:12px 20px;
-background:#2563eb;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-">
+<button>
 
 🔍 Search
 
 </button>
 
-<a href="books.php"
-style="
-padding:12px 20px;
-background:#6b7280;
-color:white;
-text-decoration:none;
-border-radius:8px;
-">
-
-Reset
-
-</a>
-
 </form>
 
 </div>
+<div class="book-container">
 
-</td>
+<?php
 
-</tr>
+if(mysqli_num_rows($result)>0){
+
+while($row=mysqli_fetch_assoc($result)){
+
+?>
+
+<div class="book-card">
+
+<div class="book-image">
+<div class="discount">
+
+20% OFF
+
+</div>
+<?php
+
+if(!empty($row['image'])){
+
+?>
+
+<img src="<?php echo $row['image']; ?>" alt="Book">
+
+<?php
+
+}else{
+
+?>
+
+<img src="images/book.png" alt="Book">
 
 <?php
 
@@ -544,43 +258,97 @@ Reset
 
 ?>
 
-</table>
+</div>
+
+<div class="book-details">
+
+<h3>
+
+<?php echo $row['book_name']; ?>
+
+</h3>
+
+<p class="author">
+
+✍ Author :
+<b><?php echo $row['author']; ?></b>
+
+</p>
+
+<p class="category">
+
+📂 <?php echo $row['category']; ?>
+
+</p>
+
+<p class="description">
+
+<?php echo $row['description']; ?>
+
+</p>
+
+<h2 class="price">
+
+₹<?php echo $row['price']; ?>
+<p style="color:#16a34a;font-weight:bold;">
+
+🚚 Free Delivery
+
+</p>
+
+</h2>
+
+<div class="rating">
+
+⭐⭐⭐⭐⭐
+
+</div>
+
+<div class="buttons">
+
+<a
+href="add_to_cart.php?id=<?php echo $row['id']; ?>"
+class="buy-btn">
+
+🛒 Add To Cart
+
+</a>
+
+<a href="#" class="wishlist-btn">
+
+❤ Wishlist
+
+</a>
 
 </div>
 
 </div>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<script>
+</div>
 
-$(document).ready(function(){
+<?php
 
-    $("#search").keyup(function(){
+}
 
-        var search = $(this).val();
+}else{
 
-        $.ajax({
+?>
 
-            url:"search_books.php",
+<h2 style="text-align:center;color:#555;">
 
-            type:"POST",
+No Books Found
 
-            data:{search:search},
+</h2>
 
-            success:function(data){
+<?php
 
-                $("#bookTable").html(data);
+}
 
-            }
+?>
 
-        });
-
-    });
-
-});
-
-</script>
-
+</div>
+</div>
 
 </body>
+
 </html>
